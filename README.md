@@ -15,7 +15,6 @@ Documentation: http://www.coolprop.org/
 
 Open-source thermodynamic and transport properties database
 
-
 Current build status
 ====================
 
