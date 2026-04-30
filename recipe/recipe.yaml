@@ -1,16 +1,18 @@
-{% set name = "CoolProp" %}
-
 # WARNING external resources may need update as well
-{% set version = "7.1.0" %}
-{% set sha256 = "38cc65541d9540e5251c255e9a1aac8062d51e8db42d9dbcb0007f904f8d8160" %}
+schema_version: 1
+
+context:
+  name: CoolProp
+  version: "7.1.0"
+  sha256: 38cc65541d9540e5251c255e9a1aac8062d51e8db42d9dbcb0007f904f8d8160
 
 package:
-  name: {{ name|lower }}
-  version: {{ version }}
+  name: ${{ name|lower }}
+  version: ${{ version }}
 
 source:
-  - url: https://github.com/CoolProp/{{ name }}/archive/v{{ version }}.tar.gz
-    sha256: {{ sha256 }}
+  - url: https://github.com/CoolProp/${{ name }}/archive/v${{ version }}.tar.gz
+    sha256: ${{ sha256 }}
     patches:
       - setup.patch
       - rapidjson.patch
@@ -18,27 +20,32 @@ source:
   # See https://github.com/CoolProp/CoolProp/tree/master/externals
   - url: https://github.com/CoolProp/IF97/archive/3ddd548f87f55db921a490ae4facb36162497009.tar.gz
     sha256: ba2ac3ffe69fc0045424eddc492b1a18041e45fefdcfaf6ea1f6ae9abc72cba8
-    folder: externals/IF97
+    target_directory: externals/IF97
   - url: https://github.com/CoolProp/REFPROP-headers/archive/b4faab1b73911c32c4b69c526c7e92f74edb67de.zip
     sha256: a98351b3618e0f9f5dc95da219feaf55d029b5f5b961fdfb8262ad3e7e6e89a7
-    folder: externals/REFPROP-headers
+    target_directory: externals/REFPROP-headers
 
 build:
-  number: 2
   # pypy is not passing and we don't want to support it
-  skip: true  # [python_impl == 'pypy']
+  number: 3
+  skip: python_impl == 'pypy'
 
 requirements:
   build:
-    - python                                 # [build_platform != target_platform]
-    - cross-python_{{ target_platform }}     # [build_platform != target_platform]
-    - cython                                 # [build_platform != target_platform]
-    - {{ compiler('c') }}
-    - {{ stdlib('c') }}
-    - {{ compiler('cxx') }}
+    - if: build_platform != target_platform
+      then: python
+    - if: build_platform != target_platform
+      then: cross-python_${{ target_platform }}
+    - if: build_platform != target_platform
+      then: cython
+    - ${{ compiler('c') }}
+    - ${{ stdlib('c') }}
+    - ${{ compiler('cxx') }}
     - cmake
-    - make   # [not win]
-    - ninja  # [win]
+    - if: not win
+      then: make
+    - if: win
+      then: ninja
   host:
     - python
     - cython
@@ -55,24 +62,25 @@ requirements:
     - numpy
     - matplotlib-base
 
-test:
-  imports:
-    - CoolProp
-    - CoolProp.tests
-    - CoolProp.Plots  # [not py2k or not linux]
-    - CoolProp.GUI
+tests:
+  - python:
+      imports:
+        - CoolProp
+        - CoolProp.tests
+        - if: not match(python, ">=2,<3") or not linux
+          then: CoolProp.Plots
+        - CoolProp.GUI
+      pip_check: false
 
 about:
-  home: https://github.com/CoolProp/CoolProp
   license: MIT
-  license_family: MIT
   license_file: LICENSE
   summary: Open-source thermodynamic and transport properties database
-
   description: |
     Open-source thermodynamic and transport properties database
-  doc_url: http://www.coolprop.org/
-  dev_url: https://github.com/CoolProp/CoolProp
+  homepage: https://github.com/CoolProp/CoolProp
+  repository: https://github.com/CoolProp/CoolProp
+  documentation: http://www.coolprop.org/
 
 extra:
   recipe-maintainers:
