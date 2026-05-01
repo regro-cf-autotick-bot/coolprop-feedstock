@@ -3,8 +3,8 @@ schema_version: 1
 
 context:
   name: CoolProp
-  version: "7.1.0"
-  sha256: 38cc65541d9540e5251c255e9a1aac8062d51e8db42d9dbcb0007f904f8d8160
+  version: "7.2.0"
+  sha256: 83b3605a82250f2cd92fb608e121e16b2b618819c9ace7b8658b8bd3c1f64a31
 
 package:
   name: ${{ name|lower }}
@@ -27,25 +27,23 @@ source:
 
 build:
   # pypy is not passing and we don't want to support it
-  number: 3
+  number: 0
   skip: python_impl == 'pypy'
 
 requirements:
   build:
     - if: build_platform != target_platform
-      then: python
-    - if: build_platform != target_platform
-      then: cross-python_${{ target_platform }}
-    - if: build_platform != target_platform
-      then: cython
+      then:
+        - python
+        - cross-python_${{ target_platform }}
+        - cython
     - ${{ compiler('c') }}
     - ${{ stdlib('c') }}
     - ${{ compiler('cxx') }}
     - cmake
     - if: not win
       then: make
-    - if: win
-      then: ninja
+      else: ninja
   host:
     - python
     - cython
