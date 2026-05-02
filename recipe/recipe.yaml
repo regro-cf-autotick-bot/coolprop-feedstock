@@ -41,6 +41,7 @@ requirements:
     - ${{ stdlib('c') }}
     - ${{ compiler('cxx') }}
     - cmake
+    - scikit-build
     - if: not win
       then: make
       else: ninja
