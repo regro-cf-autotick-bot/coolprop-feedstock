@@ -13,9 +13,9 @@ package:
 source:
   - url: https://github.com/CoolProp/${{ name }}/archive/v${{ version }}.tar.gz
     sha256: ${{ sha256 }}
-    patches:
-      - setup.patch
-      - rapidjson.patch
+  # patches:
+  #   - setup.patch
+  #   - rapidjson.patch
   # External dependencies
   # See https://github.com/CoolProp/CoolProp/tree/master/externals
   - url: https://github.com/CoolProp/IF97/archive/3ddd548f87f55db921a490ae4facb36162497009.tar.gz
