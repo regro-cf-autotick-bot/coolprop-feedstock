@@ -40,8 +40,8 @@ requirements:
     - ${{ compiler('c') }}
     - ${{ stdlib('c') }}
     - ${{ compiler('cxx') }}
-    - cmake
-    - scikit-build
+    - cmake >=3.15
+    - scikit-build-core
     - if: not win
       then: make
       else: ninja
@@ -58,7 +58,7 @@ requirements:
     - rapidjson
   run:
     - python
-    - numpy
+    - numpy >=1.2.0
     - matplotlib-base
 
 tests:
