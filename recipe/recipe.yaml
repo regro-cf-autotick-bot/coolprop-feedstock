@@ -41,14 +41,13 @@ requirements:
     - ${{ stdlib('c') }}
     - ${{ compiler('cxx') }}
     - cmake >=3.15
-    - scikit-build-core
     - if: not win
       then: make
       else: ninja
   host:
     - python
     - cython
-    - setuptools
+    - scikit-build-core
     - pip
     - catch2
     - eigen
